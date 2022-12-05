@@ -30,12 +30,17 @@ class UserResponse(BaseModel):
     class Config:
         orm_mode = True
 
-class UserDeposit(BaseModel):
+class UserTransaction(BaseModel):
     amount: int
 
-class UserDepositResponse(UserDeposit):
+class UserDepositResponse(UserTransaction):
     deposited: bool
-    money: str
+    new_balance: str
+    class Config:
+        orm_mode = True
+class UserRetrieveResponse(UserTransaction):
+    retrieved: bool
+    new_balance: str
     class Config:
         orm_mode = True
 #--------------------------------------------------------------------------------------#

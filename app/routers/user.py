@@ -36,7 +36,7 @@ def create_a_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
                 raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail=f"The username << {user.username} >> already exist")
 
 @router.post("/deposit", status_code = status.HTTP_201_CREATED, response_model=schemas.UserDepositResponse)
-def deposit_in_account(entry: schemas.UserDeposit, db: Session = Depends(get_db),
+def deposit_in_account(entry: schemas.UserTransaction, db: Session = Depends(get_db),
     current_user = Depends(oauth2.get_current_user)):
     print("Current User Type: ",type(current_user))
     if isinstance(current_user, models.User):  
@@ -48,13 +48,32 @@ def deposit_in_account(entry: schemas.UserDeposit, db: Session = Depends(get_db)
             if user == None:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Not a user!")
             else:
-                newAmount = user.first().money+entry.amount
-                user.update({"money": newAmount}, synchronize_session= False)
+                new_amount = user.first().money+entry.amount
+                user.update({"money": new_amount}, synchronize_session= False)
                 bank.update({"money":bank.first().money+entry.amount}, synchronize_session= False)
                 db.commit()
-                return {"amount":entry.amount,"deposited":True,"money":newAmount}
+                return {"amount":entry.amount,"deposited":True,"money":new_amount}
     else:
-        raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail=f"Sorry, admin functionality.")
+        raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail=f"Sorry, user functionality.")
+    
+@router.post("/retrieve", status_code = status.HTTP_201_CREATED, response_model=schemas.UserRetrieveResponse)
+def retrieve_from_account(entry: schemas.UserTransaction, db: Session = Depends(get_db),
+    current_user = Depends(oauth2.get_current_user)):
+    print("Current User Type: ",type(current_user))
+    if isinstance(current_user, models.User):  
+        user = db.query(models.User).filter(models.User.username == current_user.username)
+        if user == None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Not a user!")
+        else:
+            new_amount = user.first().money-entry.amount
+            if new_amount < 0:
+                raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail=f"Sorry, not enough money. (maximum: {user.first().money})")
+            else:
+                user.update({"money": new_amount}, synchronize_session= False)
+                db.commit()
+                return {"amount":entry.amount,"retrieved":True,"new_balance":new_amount}
+    else:
+        raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail=f"Sorry, user functionality.")
     
 
 @router.get("/all", response_model= List[schemas.UserResponse], status_code=status.HTTP_200_OK)
