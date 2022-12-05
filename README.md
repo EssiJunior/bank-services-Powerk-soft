@@ -1,2 +1,2 @@
-# bank-services-Powerk-soft
-A web application offering basic bank services
+# bank-services-Powerk-soft-backend
+APIs of a web application offering basic bank services
