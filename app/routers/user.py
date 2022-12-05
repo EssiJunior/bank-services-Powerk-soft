@@ -1,11 +1,10 @@
 from fastapi import status, Depends , HTTPException, APIRouter
-from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from .. import models, schemas, config, utils, oauth2
+from .. import models, schemas, utils, oauth2
 from typing import List 
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from ..database import get_db
-from datetime import datetime
+# from datetime import datetime
 
 router = APIRouter(
     prefix="/user",
@@ -13,7 +12,7 @@ router = APIRouter(
 )
 
 @router.post("", status_code = status.HTTP_201_CREATED, response_model=schemas.UserResponse)
-def create_a_user(user: schemas.UserCreate, db: Session = Depends(get_db) ): 
+def create_a_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     if user.password != user.confirm_password:
         raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail="Le champs 'password' et 'confirm_password' sont differents")
     else:
@@ -34,15 +33,18 @@ def create_a_user(user: schemas.UserCreate, db: Session = Depends(get_db) ):
                 return user
             except IntegrityError:
                 raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail=f"The username << {user.username} >> already exist")
-                
-                
-
 
 @router.get("/all", response_model= List[schemas.UserResponse], status_code=status.HTTP_200_OK)
-def display_all_users(db: Session = Depends(get_db)):  
-    users = db.query(models.User).all()
-    return users
+def display_all_users(db: Session = Depends(get_db),
+    current_user = Depends(oauth2.get_current_user)):
+    print("Current User Type: ",type(current_user))
+    if isinstance(current_user, models.Admin):  
+        users = db.query(models.User).all()
+        return users
 
+    else:
+        raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail=f"Sorry, admin functionality.")
+    
 @router.delete("", status_code=status.HTTP_200_OK)
 def delete_a_user(username: str, db: Session = Depends(get_db),
     current_user = Depends(oauth2.get_current_user)):
