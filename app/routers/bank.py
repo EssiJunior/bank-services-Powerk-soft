@@ -18,6 +18,9 @@ def create_a_bank(bank: schemas.BankCreate, db: Session = Depends(get_db),
         db.add(bank)
         db.commit()
         db.refresh(bank)
+        
+        bank.money = f"{bank.money} CFA franc"
+        
         return bank
 
     else:
@@ -28,11 +31,13 @@ def display_a_bank(acronym:str, db: Session = Depends(get_db),
     current_user = Depends(oauth2.get_current_user)):
     print("Current User: ",type(current_user))
     if isinstance(current_user, models.Admin):
-        request = db.query(models.Bank).filter(models.Bank.acronym == acronym).first()
-        if request == None:
+        bank = db.query(models.Bank).filter(models.Bank.acronym == acronym).first()
+        if bank == None:
             raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail=f"The specified acronym does not identify a bank in our system. " )
         
-        return request
+        
+        bank.money = f"{bank.money} CFA franc"
+        return bank
 
     else:
         raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail=f"Sorry, admin functionality.")
@@ -42,8 +47,11 @@ def display_all_banks(db: Session = Depends(get_db),
     current_user = Depends(oauth2.get_current_user)):
     print("Current User: ",type(current_user))
     if isinstance(current_user, models.Admin):
-        request = db.query(models.Bank).all()
-        return request
+        bank = db.query(models.Bank).all()
+        
+        for element in bank:
+            element.money = f"{element.money} CFA franc"
+        return bank
 
     else:
         raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail=f"Sorry, admin functionality.")
@@ -58,6 +66,8 @@ def update_a_bank(acronym: str, bank: schemas.BankCreate,db: Session = Depends(g
             raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail=f"The specified acronym does not identify a bank in our system." )
         request.update(bank.dict(), synchronize_session= False)
         db.commit()
+        
+        bank.money = f"{bank.money} CFA franc"
         return bank
 
     else:

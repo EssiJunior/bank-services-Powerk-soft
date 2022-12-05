@@ -1,5 +1,5 @@
 from .database import Base
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey, Integer
 
 class Admin(Base):
     __tablename__ = "admin"
@@ -12,11 +12,14 @@ class Bank(Base):
     
     acronym = Column(String(10), primary_key = True, nullable=False, unique=True)
     name = Column(String(100),  nullable = False)
+    money = Column(Integer, default=10000000) #10 000 000 FCFA
+    
     
 class User(Base):
     __tablename__ = "user"
     
     username = Column(String(30), primary_key = True, nullable=False, unique=True)
     password = Column(String(100),  nullable = False)
+    money = Column(Integer, default=0) #0 FCFA
     bank = Column(String(10), ForeignKey("bank.acronym", ondelete="CASCADE", onupdate="CASCADE"), nullable = False)
 

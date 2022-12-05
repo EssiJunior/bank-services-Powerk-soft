@@ -46,6 +46,7 @@ app.include_router(user.router)
 
 @app.get("/")
 def root():
+    print(utils.hashed("Powerk-soft"))
     return {"message": "Hello world"}
 
 

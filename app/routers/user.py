@@ -30,6 +30,7 @@ def create_a_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
                 db.commit()
                 db.refresh(user)
                     
+                user.money = f"{user.money} CFA franc"
                 return user
             except IntegrityError:
                 raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail=f"The username << {user.username} >> already exist")
@@ -40,6 +41,9 @@ def display_all_users(db: Session = Depends(get_db),
     print("Current User Type: ",type(current_user))
     if isinstance(current_user, models.Admin):  
         users = db.query(models.User).all()
+        
+        for element in users:
+            element.money = f"{element.money} CFA franc"
         return users
 
     else:

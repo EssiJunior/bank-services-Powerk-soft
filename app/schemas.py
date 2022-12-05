@@ -26,6 +26,7 @@ class UserCreate(BaseModel):
 class UserResponse(BaseModel):
     username: str 
     bank: str
+    money: str
     class Config:
         orm_mode = True
 
@@ -36,7 +37,7 @@ class BankCreate(BaseModel):
     name: str 
 
 class BankResponse(BankCreate):
-    ...
+    money: str
     class Config:
         orm_mode = True
 
