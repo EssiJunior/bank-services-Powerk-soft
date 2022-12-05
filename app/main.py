@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # from sqlalchemy.orm import Session
 from .database import engine 
 from . import models #, schemas, utils
-
+from .routers import admin
 
 models.Base.metadata.create_all(bind=engine) 
 
@@ -40,7 +40,7 @@ app.add_middleware(
 )
 
 # --------------------------- routers --------------------------- #
-# app.include_router(admin.router)
+app.include_router(admin.router)
 
 @app.get("/")
 def root():
