@@ -18,13 +18,13 @@ class AdminResponse(BaseModel):
 #--------------------------------------------------------------------------------------#
 #--------------------------------- User management  ---------------------------------#
 class UserCreate(BaseModel):
-    login: str 
+    username: str 
     password: str 
     confirm_password: str 
     bank: str
 
 class UserResponse(BaseModel):
-    login: str 
+    username: str 
     bank: str
     class Config:
         orm_mode = True

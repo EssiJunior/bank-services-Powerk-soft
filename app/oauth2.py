@@ -43,9 +43,11 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     tokenD = verify_access_token(token, credentials_exception)
     admin = db.query(models.Admin).filter(models.Admin.login == tokenD.id).first()
     if admin == None:
-        ...
-        # teacher = db.query(models.User).filter(models.User.login == tokenD.id).first()
-        # return teacher
+        user = db.query(models.User).filter(models.User.username == tokenD.id).first()
+        if user == None:
+            raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail=f"Not a user type. ")
+        else:
+            return user
     else:
         return admin
 
