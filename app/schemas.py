@@ -30,6 +30,14 @@ class UserResponse(BaseModel):
     class Config:
         orm_mode = True
 
+class UserDeposit(BaseModel):
+    amount: int
+
+class UserDepositResponse(UserDeposit):
+    deposited: bool
+    money: str
+    class Config:
+        orm_mode = True
 #--------------------------------------------------------------------------------------#
 #--------------------------------- Bank management  ---------------------------------#
 class BankCreate(BaseModel):
