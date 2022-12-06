@@ -73,3 +73,19 @@ def login(user_log: OAuth2PasswordRequestForm = Depends(), db: Session = Depends
         user_type = "user"
         return {"access_token": access_token, "token_type": "Bearer", "user": user_type}
 
+
+@app.get("/logout", response_model=schemas.LoginResponse)
+def logout(db: Session = Depends(get_db),
+    current_user = Depends(oauth2.get_current_user)):
+    print("Current User: ",type(current_user))
+    if isinstance(current_user, models.Admin):
+        ...
+        #TODO
+        
+    elif isinstance(current_user, models.User):
+        ...
+        #TODO
+    
+    else:
+        ...
+        #TODO
