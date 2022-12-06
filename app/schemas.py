@@ -32,6 +32,8 @@ class UserResponse(BaseModel):
 
 class UserTransaction(BaseModel):
     amount: int
+class UserToUser(UserTransaction):
+    to_user: str
 
 class UserDepositResponse(UserTransaction):
     deposited: bool
@@ -40,6 +42,12 @@ class UserDepositResponse(UserTransaction):
         orm_mode = True
 class UserRetrieveResponse(UserTransaction):
     retrieved: bool
+    new_balance: str
+    class Config:
+        orm_mode = True
+class UserToUserResponse(UserToUser):
+    from_user: str
+    transferred: bool
     new_balance: str
     class Config:
         orm_mode = True
