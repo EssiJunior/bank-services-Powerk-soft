@@ -1,6 +1,6 @@
 # bank-services
-#---------------
-##Powerk-soft
+# ---------------
+## Powerk-soft
 
 **Description:** Backend APIs of a web application offering basic bank services.
 
