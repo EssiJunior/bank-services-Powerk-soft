@@ -3,5 +3,5 @@
 **Description:** Backend APIs of a web application offering basic bank services.
 
 **Technologies:** 
-> - FastAPI [Python framework](https://fastapi.tiangolo.com/)
+> - [FastAPI](https://fastapi.tiangolo.com/) (Python framework)
 > + SQL DB (PostgreSQL DBMS)
