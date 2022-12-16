@@ -14,12 +14,12 @@ router = APIRouter(
 @router.post("", status_code = status.HTTP_201_CREATED, response_model=schemas.UserResponse)
 def create_a_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     if user.password != user.confirm_password:
-        raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail="Le champs 'password' et 'confirm_password' sont differents")
+        raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail="Les champs 'password' et 'confirm_password' sont differents")
     else:
         bank = db.query(models.Bank).filter(models.Bank.acronym == user.bank).first()
-        print(bank)
+        print("+=+=++++==++=+",bank)
         if bank == None:
-            raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail=f"The specified acronym does not identify a bank in our system. " )
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"The specified acronym does not identify a bank in our system. " )
     
         else:
             try:
