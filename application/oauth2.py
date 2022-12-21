@@ -8,7 +8,6 @@ from fastapi.security import OAuth2PasswordBearer
 from .config import settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
-oauth2_scheme_main = OAuth2PasswordBearer(tokenUrl="/user/this")
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
@@ -43,21 +42,6 @@ def verify_access_token(token: str, credentials_exception):
 
 
 def get_current_user(token: str=Depends(oauth2_scheme), db: Session=Depends(database.get_db)):
-    credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="could not validate credentials"
-    , headers={"WWW-Authenticate":"Bearer"})
-    tokenD = verify_access_token(token, credentials_exception)
-    admin = db.query(models.Admin).filter(models.Admin.login == tokenD.id).first()
-    if admin == None:
-        user = db.query(models.User).filter(models.User.username == tokenD.id).first()
-        if user == None:
-            raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail=f"Not a user type. ")
-        else:
-            return user
-    else:
-        return admin
-
-
-def get_current_user_test(token: str, db: Session=Depends(database.get_db)):
     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="could not validate credentials"
     , headers={"WWW-Authenticate":"Bearer"})
     tokenD = verify_access_token(token, credentials_exception)

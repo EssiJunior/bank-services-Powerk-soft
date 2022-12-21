@@ -1,3 +1,4 @@
+from fastapi import HTTPException, status
 from passlib.context import CryptContext
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -13,8 +14,8 @@ def verified(password: str, db_password: str):
 
 #-----------------------------/ Useful messages /-----------------------------#
 SuperAdminException = ["Incorrect super admin key (Contact: +237 690743737)", "Sorry, super admin functionality."]
-AdminException = ["Sorry, admin functionality."]
-BankException = ["The specified acronym does not identify a bank in our system. "]
-UserException = ["Not a user.", "Sorry, user functionality.", "Sorry,Users should belong to the same bank.", "Cannot transfer to yourself, (see Deposit)"]
 EntryException = ["Incorrect password", "Entries 'password' et 'confirm_password' are different"]
+BankException = ["The specified acronym does not identify a bank in our system. "]
+UserException = ["Not a user.", "Sorry, user functionality.", "Sorry,Users should belong to the same bank."]
+AdminException = ["Sorry, admin functionality."]
 no_account = "You don't have an account"
