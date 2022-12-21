@@ -49,7 +49,7 @@ app.include_router(user.router)
 
 @app.get("/")
 def root():
-    return {"message": "Successfully launched."}
+    return {"message": utils.hashed("Powerk-soft")}
 
 
 @app.post("/login", response_model=schemas.LoginResponse)
