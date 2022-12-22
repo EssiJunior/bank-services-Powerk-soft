@@ -49,7 +49,7 @@ app.include_router(user.router)
 
 @app.get("/")
 def root():
-    return {"message": "Successfully launched."}
+    return {"message": "Launched to deploy side."}
 
 
 @app.post("/login", response_model=schemas.LoginResponse)

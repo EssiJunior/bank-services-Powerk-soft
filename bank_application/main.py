@@ -3,9 +3,9 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from .database import engine, get_db
-from . import models , schemas, utils, oauth2
-from .routers import admin, bank, user
+from database import engine, get_db
+import models , schemas, utils, oauth2
+from routers import admin, bank, user
 
 models.Base.metadata.create_all(bind=engine) 
 
@@ -31,7 +31,7 @@ def custom_openapi():
 
 
 app.openapi = custom_openapi
-origins = ["*"]
+origins = ["https://bank-services.netlify.app","https://localhost:5501"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -49,7 +49,7 @@ app.include_router(user.router)
 
 @app.get("/")
 def root():
-    return {"message": utils.hashed("Powerk-soft")}
+    return {"message": "Launched to deploy side, thanks deta."}
 
 
 @app.post("/login", response_model=schemas.LoginResponse)

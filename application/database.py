@@ -3,9 +3,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from .config import settings
 
-SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
+# SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
+SQLALCHEMY_DATABASE_URL = 'sqlite:///./bank_system.db'
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL, pool_size=20, max_overflow=0, echo=True)
+engine = create_engine(SQLALCHEMY_DATABASE_URL,connect_args={"check_same_thread": False}, echo=True)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
