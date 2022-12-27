@@ -31,8 +31,8 @@ def custom_openapi():
 
 
 app.openapi = custom_openapi
-origins = ["https://bank-services.netlify.app","https://localhost:5501"]
-
+# origins = ["https://bank-services.netlify.app","https://localhost:5501"]
+origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
